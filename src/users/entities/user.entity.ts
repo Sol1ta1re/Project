@@ -1,9 +1,10 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "../../orders/entities/order.entity";
+
+export enum UserRole {
+  USER = "user",
+  ADMIN = "admin",
+}
 
 @Entity()
 export class User {
@@ -16,9 +17,22 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
-  age?: number;
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
 
-  @CreateDateColumn()
+  @Column({ select: false })
+  password: string;
+
+  @Column()
+  age: number;
+
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }

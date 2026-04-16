@@ -1,7 +1,17 @@
-import { IsEmail, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from "class-validator";
+import { UserRole } from "../entities/user.entity";
 
 export class UpdateUserDto {
   @IsOptional()
+  @IsString()
   name?: string;
 
   @IsOptional()
@@ -9,6 +19,12 @@ export class UpdateUserDto {
   email?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(150)
   age?: number;
+
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 }
